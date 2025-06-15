@@ -59,7 +59,9 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
                 remaining.max(0.0)
             )
         }
-        TimerState::ReadyToStart => "                                                ***".to_string(),
+        TimerState::ReadyToStart => {
+            "                                                ***".to_string()
+        }
         TimerState::Solving(start) => format!(
             "                                                {:.3}",
             start.elapsed().as_secs_f64()
