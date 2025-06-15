@@ -3,7 +3,7 @@ use rand::rng;
 
 pub fn generate_scramble() -> String {
     let faces = ["U", "D", "F", "B", "L", "R"];
-    let modifiers = ["", "'", "2"];
+    let modifiers = ["", "^", "2"];
     let mut rng = rng();
     let mut scramble = Vec::new();
     let mut last_face = "";
@@ -20,5 +20,5 @@ pub fn generate_scramble() -> String {
         last_face = face;
     }
 
-    scramble.join("")
+    scramble.join("  ")
 }

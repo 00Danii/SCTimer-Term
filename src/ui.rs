@@ -26,7 +26,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
     // --- SCRAMBLE + INSTRUCCIONES ---
     // Carga la fuente estándar, y convierte el scramble a FIGure
     // let standard_font = FIGfont::standard().unwrap();
-    let small_font = FIGfont::from_file("assets/lcd.flf").unwrap();
+    let small_font = FIGfont::from_file("assets/short.flf").unwrap();
     let scramble_figure = small_font.convert(&app.scramble);
 
     let scramble_ascii = match scramble_figure {
