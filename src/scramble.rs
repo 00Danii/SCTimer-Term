@@ -8,7 +8,7 @@ pub fn generate_scramble() -> String {
     let mut scramble = Vec::new();
     let mut last_face = "";
 
-    while scramble.len() < 20 {
+    while scramble.len() < 19 {
         let face = faces.choose(&mut rng).unwrap();
 
         if face == &last_face {
@@ -20,5 +20,5 @@ pub fn generate_scramble() -> String {
         last_face = face;
     }
 
-    scramble.join("  ")
+    scramble.join("")
 }

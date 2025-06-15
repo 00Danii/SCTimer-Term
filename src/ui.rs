@@ -17,8 +17,8 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .direction(Direction::Vertical)
         .margin(1)
         .constraints([
-            Constraint::Length(10), // Scramble e instrucciones
-            Constraint::Length(8),  // Timer grande
+            Constraint::Length(6),  // Scramble e instrucciones
+            Constraint::Length(10), // Timer grande
             Constraint::Min(10),    // Historial largo
         ])
         .split(size);
@@ -26,7 +26,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
     // --- SCRAMBLE + INSTRUCCIONES ---
     // Carga la fuente estándar, y convierte el scramble a FIGure
     // let standard_font = FIGfont::standard().unwrap();
-    let small_font = FIGfont::from_file("assets/short.flf").unwrap();
+    let small_font = FIGfont::from_file("assets/mini.flf").unwrap();
     let scramble_figure = small_font.convert(&app.scramble);
 
     let scramble_ascii = match scramble_figure {
@@ -51,18 +51,27 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
 
     // --- TIMER GRANDE ASCII ---
     let timer_text = match &app.state {
-        TimerState::Idle => "00:00".into(),
+        TimerState::Idle => "                                                00:00".into(),
         TimerState::Inspection(start) => {
             let remaining = 20.0 - start.elapsed().as_secs_f64();
-            format!("Inspección: {:.1}s", remaining.max(0.0))
+            format!(
+                "                                             -{:.1}",
+                remaining.max(0.0)
+            )
         }
-        TimerState::ReadyToStart => "...".to_string(),
-        TimerState::Solving(start) => format!("{:.3}s", start.elapsed().as_secs_f64()),
-        TimerState::Solved(duration) => format!("Resuelto {:.3}s", duration.as_secs_f64()),
+        TimerState::ReadyToStart => "                                                ***".to_string(),
+        TimerState::Solving(start) => format!(
+            "                                                {:.3}",
+            start.elapsed().as_secs_f64()
+        ),
+        TimerState::Solved(duration) => format!(
+            "                                                {:.3}",
+            duration.as_secs_f64()
+        ),
     };
 
     // Carga la fuente estándar, y usa unwrap_or para un FIGure vacío si falla
-    let standard_font = FIGfont::standard().unwrap();
+    let standard_font = FIGfont::from_file("assets/alligator2.flf").unwrap();
     let figure: FIGure = standard_font.convert(&timer_text).unwrap();
 
     // Convierte el FIGure a string con to_string()
