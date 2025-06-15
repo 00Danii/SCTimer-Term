@@ -16,6 +16,7 @@ pub struct App {
     pub space_pressed: bool,
     pub exit: bool,
     pub scramble: String,
+    pub last_solved: Option<Duration>,
 }
 
 impl Default for App {
@@ -26,6 +27,7 @@ impl Default for App {
             space_pressed: false,
             exit: false,
             scramble: generate_scramble(),
+            last_solved: None,
         }
     }
 }
@@ -70,7 +72,6 @@ impl App {
 
             match self.state {
                 TimerState::Idle => {
-                    // self.scramble = generate_scramble();
                     self.state = TimerState::Inspection(Instant::now());
                 }
                 TimerState::Inspection(_) => {
@@ -79,10 +80,9 @@ impl App {
                 TimerState::Solving(start) => {
                     let elapsed = start.elapsed();
                     self.times.push((elapsed, self.scramble.clone()));
+                    self.last_solved = Some(elapsed);
                     self.state = TimerState::Solved(elapsed);
-                    self.scramble = generate_scramble();
                 }
-                
                 _ => {}
             }
         }
@@ -92,10 +92,16 @@ impl App {
         if key.code == KeyCode::Char(' ') {
             self.space_pressed = false;
 
-            if let TimerState::ReadyToStart = self.state {
-                self.state = TimerState::Solving(Instant::now());
-            } else if let TimerState::Solved(_) = self.state {
-                self.state = TimerState::Idle;
+            match self.state {
+                TimerState::ReadyToStart => {
+                    self.state = TimerState::Solving(Instant::now());
+                }
+                TimerState::Solved(_) => {
+                    // Aquí sí cambias el scramble y vuelves a Idle
+                    self.scramble = generate_scramble();
+                    self.state = TimerState::Idle;
+                }
+                _ => {}
             }
         }
     }

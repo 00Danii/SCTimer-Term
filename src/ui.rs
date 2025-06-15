@@ -51,7 +51,16 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
 
     // --- TIMER GRANDE ASCII ---
     let timer_text = match &app.state {
-        TimerState::Idle => "                                                00:00".into(),
+        TimerState::Idle => {
+            if let Some(last) = app.last_solved {
+                format!(
+                    "                                                {:.3}",
+                    last.as_secs_f64()
+                )
+            } else {
+                "                                                00:00".into()
+            }
+        }
         TimerState::Inspection(start) => {
             let remaining = 20.0 - start.elapsed().as_secs_f64();
             format!(
