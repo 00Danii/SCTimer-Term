@@ -70,7 +70,7 @@ impl App {
 
             match self.state {
                 TimerState::Idle => {
-                    self.scramble = generate_scramble();
+                    // self.scramble = generate_scramble();
                     self.state = TimerState::Inspection(Instant::now());
                 }
                 TimerState::Inspection(_) => {
@@ -80,7 +80,9 @@ impl App {
                     let elapsed = start.elapsed();
                     self.times.push((elapsed, self.scramble.clone()));
                     self.state = TimerState::Solved(elapsed);
+                    self.scramble = generate_scramble();
                 }
+                
                 _ => {}
             }
         }
