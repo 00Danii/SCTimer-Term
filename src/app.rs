@@ -97,7 +97,6 @@ impl App {
                     self.state = TimerState::Solving(Instant::now());
                 }
                 TimerState::Solved(_) => {
-                    // Aquí sí cambias el scramble y vuelves a Idle
                     self.scramble = generate_scramble();
                     self.state = TimerState::Idle;
                 }

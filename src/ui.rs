@@ -1,6 +1,5 @@
 use crate::app::App;
 use crate::state::TimerState;
-// use ratatui::prelude::Widget;
 use figlet_rs::{FIGfont, FIGure};
 use ratatui::{
     Frame,
@@ -24,8 +23,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .split(size);
 
     // --- SCRAMBLE + INSTRUCCIONES ---
-    // Carga la fuente estándar, y convierte el scramble a FIGure
-    // let standard_font = FIGfont::standard().unwrap();
+    // Carga la fuente personalizada, y convierte el scramble a FIGure
     let small_font = FIGfont::from_file("assets/mini.flf").unwrap();
     let scramble_figure = small_font.convert(&app.scramble);
 
@@ -81,7 +79,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         ),
     };
 
-    // Carga la fuente estándar, y usa unwrap_or para un FIGure vacío si falla
+    // Carga la fuente, y usa unwrap_or para un FIGure vacío si falla
     let standard_font = FIGfont::from_file("assets/alligator2.flf").unwrap();
     let figure: FIGure = standard_font.convert(&timer_text).unwrap();
 
