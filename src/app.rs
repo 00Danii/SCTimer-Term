@@ -108,4 +108,20 @@ impl App {
     fn draw(&self, frame: &mut Frame) {
         render_ui(self, frame);
     }
+
+    // calculo de tiempos promedios
+    pub fn average(&self, n: usize) -> Option<f64> {
+        let len = self.times.len();
+        if len < n {
+            return None;
+        }
+        let sum: f64 = self
+            .times
+            .iter()
+            .rev()
+            .take(n)
+            .map(|(d, _)| d.as_secs_f64())
+            .sum();
+        Some(sum / n as f64)
+    }
 }

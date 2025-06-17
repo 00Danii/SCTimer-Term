@@ -18,7 +18,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .constraints([
             Constraint::Length(6),  // Scramble e instrucciones
             Constraint::Length(10), // Timer grande
-            Constraint::Min(10),    // Historial largo
+            Constraint::Min(15),    // Historial largo
         ])
         .split(size);
 
@@ -102,6 +102,41 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
 
     frame.render_widget(timer_paragraph, chunks[1]);
 
+    // --- PROMEDIOS ---
+    let avg5 = app
+        .average(5)
+        .map(|a| format!("{:.3}", a))
+        .unwrap_or("--".into());
+    let avg12 = app
+        .average(12)
+        .map(|a| format!("{:.3}", a))
+        .unwrap_or("--".into());
+    let avg50 = app
+        .average(50)
+        .map(|a| format!("{:.3}", a))
+        .unwrap_or("--".into());
+
+    let averages_str = format!("Ao5: {}  Ao12: {}  Ao50: {}", avg5, avg12, avg50);
+
+    let standard_font = FIGfont::from_file("assets/straight.flf").unwrap();
+    let figure: FIGure = standard_font.convert(&averages_str).unwrap();
+    let ascii_str = figure.to_string();
+
+    let averages_lines: Vec<Line> = ascii_str
+        .lines()
+        .map(|line| {
+            Line::from(Span::styled(
+                line.to_string(),
+                Style::default().fg(Color::Yellow).bold(),
+            ))
+        })
+        .collect();
+
+    let averages_paragraph = Paragraph::new(Text::from(averages_lines))
+        .block(Block::default().borders(Borders::ALL).title("Promedios"));
+
+    frame.render_widget(averages_paragraph, chunks[2]);
+
     // --- HISTORIAL DE TIEMPOS + SCRAMBLES ---
     let items: Vec<ListItem> = app
         .times
@@ -126,5 +161,11 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         )
         .highlight_style(Style::default().bg(Color::Magenta));
 
-    frame.render_widget(history, chunks[2]);
+    // Ajusta el chunk para que el historial quede debajo de los promedios
+    let history_chunk = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Length(5), Constraint::Min(7)])
+        .split(chunks[2]);
+
+    frame.render_widget(history, history_chunk[1]);
 }
