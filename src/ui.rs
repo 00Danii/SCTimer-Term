@@ -102,7 +102,16 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
 
     frame.render_widget(timer_paragraph, chunks[1]);
 
-    // --- PROMEDIOS ---
+    // --- PANEL PRINCIPAL: Promedios a la izquierda, historial a la derecha ---
+    let panel_chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Length(80), // Promedios
+            Constraint::Min(30),    // Historial
+        ])
+        .split(chunks[2]);
+
+    // --- PROMEDIOS (panel izquierdo) ---
     let avg5 = app
         .average(5)
         .map(|a| format!("{:.3}", a))
@@ -116,14 +125,21 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .map(|a| format!("{:.3}", a))
         .unwrap_or("--".into());
 
-    let averages_str = format!("Ao5: {}  Ao12: {}  Ao50: {}", avg5, avg12, avg50);
+    let font = FIGfont::from_file("assets/small.flf").unwrap();
+    let avg5_fig = font.convert(&format!("Ao5: ")).unwrap().to_string();
+    let avg12_fig = font
+        .convert(&format!("Ao12: 20.012"))
+        .unwrap()
+        .to_string();
+    let avg50_fig = font
+        .convert(&format!("Ao50: 99.999"))
+        .unwrap()
+        .to_string();
 
-    let standard_font = FIGfont::from_file("assets/straight.flf").unwrap();
-    let figure: FIGure = standard_font.convert(&averages_str).unwrap();
-    let ascii_str = figure.to_string();
-
-    let averages_lines: Vec<Line> = ascii_str
+    let averages_lines: Vec<Line> = avg5_fig
         .lines()
+        .chain(avg12_fig.lines())
+        .chain(avg50_fig.lines())
         .map(|line| {
             Line::from(Span::styled(
                 line.to_string(),
@@ -135,9 +151,9 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
     let averages_paragraph = Paragraph::new(Text::from(averages_lines))
         .block(Block::default().borders(Borders::ALL).title("Promedios"));
 
-    frame.render_widget(averages_paragraph, chunks[2]);
+    frame.render_widget(averages_paragraph, panel_chunks[0]);
 
-    // --- HISTORIAL DE TIEMPOS + SCRAMBLES ---
+    // --- HISTORIAL DE TIEMPOS + SCRAMBLES (panel derecho) ---
     let items: Vec<ListItem> = app
         .times
         .iter()
@@ -161,11 +177,5 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         )
         .highlight_style(Style::default().bg(Color::Magenta));
 
-    // Ajusta el chunk para que el historial quede debajo de los promedios
-    let history_chunk = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([Constraint::Length(5), Constraint::Min(7)])
-        .split(chunks[2]);
-
-    frame.render_widget(history, history_chunk[1]);
+    frame.render_widget(history, panel_chunks[1]);
 }
