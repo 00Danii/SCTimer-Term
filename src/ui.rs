@@ -120,25 +120,34 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .average(12)
         .map(|a| format!("{:.3}", a))
         .unwrap_or("--".into());
+    let avg25 = app
+        .average(25)
+        .map(|a| format!("{:.3}", a))
+        .unwrap_or("--".into());
     let avg50 = app
         .average(50)
         .map(|a| format!("{:.3}", a))
         .unwrap_or("--".into());
 
     let font = FIGfont::from_file("assets/small.flf").unwrap();
-    let avg5_fig = font.convert(&format!("Ao5: ")).unwrap().to_string();
+    let avg5_fig = font.convert(&format!("Ao5: {}", avg5)).unwrap().to_string();
     let avg12_fig = font
-        .convert(&format!("Ao12: 20.012"))
+        .convert(&format!("Ao12: {}", avg12))
+        .unwrap()
+        .to_string();
+    let avg25_fig = font
+        .convert(&format!("Ao25: {}", avg25))
         .unwrap()
         .to_string();
     let avg50_fig = font
-        .convert(&format!("Ao50: 99.999"))
+        .convert(&format!("Ao50: {}", avg50))
         .unwrap()
         .to_string();
 
     let averages_lines: Vec<Line> = avg5_fig
         .lines()
         .chain(avg12_fig.lines())
+        .chain(avg25_fig.lines())
         .chain(avg50_fig.lines())
         .map(|line| {
             Line::from(Span::styled(
