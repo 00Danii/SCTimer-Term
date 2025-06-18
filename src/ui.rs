@@ -37,7 +37,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .map(|line| {
             Line::from(Span::styled(
                 line.to_string(),
-                Style::default().fg(Color::Green).bold(),
+                Style::default().fg(Color::LightBlue).bold(),
             ))
         })
         .collect();
@@ -92,7 +92,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .map(|line| {
             Line::from(Span::styled(
                 line.to_string(),
-                Style::default().fg(Color::Yellow).bold(),
+                Style::default().fg(Color::LightGreen).bold(),
             ))
         })
         .collect();
@@ -152,7 +152,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .map(|line| {
             Line::from(Span::styled(
                 line.to_string(),
-                Style::default().fg(Color::Yellow).bold(),
+                Style::default().fg(Color::LightMagenta).bold(),
             ))
         })
         .collect();
@@ -178,7 +178,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
             let num = total - (scroll + i);
             let content = Text::from(Line::from(vec![
                 Span::raw(format!("{}: {:.3}s - ", num, duration.as_secs_f64())),
-                Span::styled(scramble.clone(), Style::default().fg(Color::LightMagenta)),
+                Span::styled(scramble.clone(), Style::default().fg(Color::LightRed)),
             ]));
             ListItem::new(content)
         })
@@ -190,7 +190,7 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
                 .borders(Borders::ALL)
                 .title("Historial de tiempos"),
         )
-        .highlight_style(Style::default().bg(Color::Magenta));
+        .highlight_style(Style::default());
 
     frame.render_widget(history, panel_chunks[1]);
 
