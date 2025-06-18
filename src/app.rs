@@ -8,6 +8,7 @@ use crate::state::TimerState;
 use crate::ui::render_ui;
 
 use crate::scramble::generate_scramble;
+use ratatui::widgets::ScrollbarState;
 
 #[derive(Debug)]
 pub struct App {
@@ -17,6 +18,8 @@ pub struct App {
     pub exit: bool,
     pub scramble: String,
     pub last_solved: Option<Duration>,
+    pub history_scroll: usize,
+    pub history_scroll_state: ScrollbarState,
 }
 
 impl Default for App {
@@ -28,6 +31,8 @@ impl Default for App {
             exit: false,
             scramble: generate_scramble(),
             last_solved: None,
+            history_scroll: 0,
+            history_scroll_state: ScrollbarState::new(0),
         }
     }
 }
@@ -84,6 +89,20 @@ impl App {
                     self.state = TimerState::Solved(elapsed);
                 }
                 _ => {}
+            }
+        }
+
+        // Scroll historial
+        if key.code == KeyCode::Up {
+            if self.history_scroll + 1 < self.times.len() {
+                self.history_scroll += 1;
+                self.history_scroll_state = self.history_scroll_state.position(self.history_scroll);
+            }
+        }
+        if key.code == KeyCode::Down {
+            if self.history_scroll > 0 {
+                self.history_scroll -= 1;
+                self.history_scroll_state = self.history_scroll_state.position(self.history_scroll);
             }
         }
     }

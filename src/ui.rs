@@ -6,7 +6,7 @@ use ratatui::{
     layout::{Constraint, Direction, Layout},
     style::{Color, Style, Stylize},
     text::{Line, Span, Text},
-    widgets::{Block, Borders, List, ListItem, Paragraph},
+    widgets::{Block, Borders, List, ListItem, Paragraph, Scrollbar, ScrollbarOrientation},
 };
 
 pub fn render_ui(app: &App, frame: &mut Frame) {
@@ -163,11 +163,16 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
     frame.render_widget(averages_paragraph, panel_chunks[0]);
 
     // --- HISTORIAL DE TIEMPOS + SCRAMBLES (panel derecho) ---
+    let total = app.times.len();
+    let scroll = app.history_scroll;
+    let visible = 19;
+
     let items: Vec<ListItem> = app
         .times
         .iter()
         .rev()
-        .take(50)
+        .skip(scroll)
+        .take(visible)
         .enumerate()
         .map(|(i, (duration, scramble))| {
             let content = Text::from(Line::from(vec![
@@ -182,9 +187,22 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .title("Historial (últimos 50)"),
+                .title("Historial de tiempos"),
         )
         .highlight_style(Style::default().bg(Color::Magenta));
 
     frame.render_widget(history, panel_chunks[1]);
+
+    // --- BARRA DE SCROLL ---
+    let total_items = app.times.len();
+    let visible_items = visible;
+    let mut scroll_state = app.history_scroll_state.content_length(total_items);
+
+    if total_items > visible_items {
+        frame.render_stateful_widget(
+            Scrollbar::new(ScrollbarOrientation::VerticalRight),
+            panel_chunks[1],
+            &mut scroll_state,
+        );
+    }
 }
