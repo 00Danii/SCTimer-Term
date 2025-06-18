@@ -175,8 +175,9 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .take(visible)
         .enumerate()
         .map(|(i, (duration, scramble))| {
+            let num = total - (scroll + i);
             let content = Text::from(Line::from(vec![
-                Span::raw(format!("{}: {:.3}s - ", i + 1, duration.as_secs_f64())),
+                Span::raw(format!("{}: {:.3}s - ", num, duration.as_secs_f64())),
                 Span::styled(scramble.clone(), Style::default().fg(Color::LightMagenta)),
             ]));
             ListItem::new(content)
