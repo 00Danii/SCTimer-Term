@@ -24,7 +24,8 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
 
     // --- SCRAMBLE + INSTRUCCIONES ---
     // Carga la fuente personalizada, y convierte el scramble a FIGure
-    let small_font = FIGfont::from_file("assets/mini.flf").unwrap();
+    let font_data = include_str!("../assets/mini.flf");
+    let small_font = FIGfont::from_content(font_data).unwrap();
     let scramble_figure = small_font.convert(&app.scramble);
 
     let scramble_ascii = match scramble_figure {
@@ -80,8 +81,11 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
     };
 
     // Carga la fuente, y usa unwrap_or para un FIGure vacío si falla
-    let standard_font = FIGfont::from_file("assets/alligator2.flf").unwrap();
-    let figure: FIGure = standard_font.convert(&timer_text).unwrap();
+
+    let font_data = include_str!("../assets/alligator2.flf");
+    let alligator_font = FIGfont::from_content(font_data).unwrap();
+
+    let figure: FIGure = alligator_font.convert(&timer_text).unwrap();
 
     // Convierte el FIGure a string con to_string()
     let ascii_str = figure.to_string();
@@ -129,17 +133,22 @@ pub fn render_ui(app: &App, frame: &mut Frame) {
         .map(|a| format!("{:.3}", a))
         .unwrap_or("--".into());
 
-    let font = FIGfont::from_file("assets/small.flf").unwrap();
-    let avg5_fig = font.convert(&format!("Ao5: {}", avg5)).unwrap().to_string();
-    let avg12_fig = font
+    let font_data = include_str!("../assets/small.flf");
+    let small_font = FIGfont::from_content(font_data).unwrap();
+
+    let avg5_fig = small_font
+        .convert(&format!("Ao5: {}", avg5))
+        .unwrap()
+        .to_string();
+    let avg12_fig = small_font
         .convert(&format!("Ao12: {}", avg12))
         .unwrap()
         .to_string();
-    let avg25_fig = font
+    let avg25_fig = small_font
         .convert(&format!("Ao25: {}", avg25))
         .unwrap()
         .to_string();
-    let avg50_fig = font
+    let avg50_fig = small_font
         .convert(&format!("Ao50: {}", avg50))
         .unwrap()
         .to_string();
