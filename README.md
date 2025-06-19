@@ -59,7 +59,7 @@ Ideal para speedcubers que aman la eficiencia y el minimalismo, pero no quieren 
 
 ---
 
-## 🎹 Controles
+##  Controles
 
 - `Espacio`: Iniciar inspección, empezar y terminar resolución.
 - `↑ / ↓`: Navegar por el historial de tiempos.
@@ -96,5 +96,3 @@ Si tienes ideas para nuevas funciones, abre un issue o crea un fork.
 MIT
 
 ---
-
-¡Que tus solves sean rápidos y tus averages
