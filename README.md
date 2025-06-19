@@ -45,7 +45,7 @@ Ideal para speedcubers que aman la eficiencia y el minimalismo, pero no quieren 
 
 1. **Clona el repositorio:**
    ```sh
-   git clone https://github.com/tuusuario/sctimer-term.git
+   git clone https://github.com/00Danii/SCTimer-Term.git
    cd sctimer-term
    ```
 
