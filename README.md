@@ -91,8 +91,3 @@ Si tienes ideas para nuevas funciones, abre un issue o crea un fork.
 
 ---
 
-## 📄 Licencia
-
-MIT
-
----
